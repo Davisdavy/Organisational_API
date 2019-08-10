@@ -10,11 +10,34 @@ public class Departments {
 
 
     //Constructor
-    public Departments(String dpt_name,String dpt_description,String dpt_empNo){
-        this.dpt_description=dpt_description;
-        this.dpt_empNo = dpt_empNo;
+
+
+    public String getDpt_name() {
+        return dpt_name;
+    }
+
+    public void setDpt_name(String dpt_name) {
         this.dpt_name = dpt_name;
     }
+
+    public String getDpt_description() {
+        return dpt_description;
+    }
+
+    public void setDpt_description(String dpt_description) {
+        this.dpt_description = dpt_description;
+    }
+
+    public String getDpt_empNo() {
+        return dpt_empNo;
+    }
+
+    public void setDpt_empNo(String dpt_empNo) {
+        this.dpt_empNo = dpt_empNo;
+    }
+
+    //Override
+
 
     @Override
     public boolean equals(Object o) {
