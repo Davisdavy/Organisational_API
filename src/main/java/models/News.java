@@ -7,7 +7,7 @@ public class News {
     private int dpt_id;
     private String news_name;
 
-    public News(String news_content, int dpt_id, String news_name) {
+    public News(int dpt_id,String news_name,String news_content) {
         this.news_content = news_content;
         this.dpt_id = dpt_id;
         this.news_name = news_name;
