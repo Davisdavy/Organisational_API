@@ -17,6 +17,23 @@ public class Employees {
         this.emp_position = emp_position;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employees employees = (Employees) o;
+        return id == employees.id &&
+                Objects.equals(emp_name, employees.emp_name) &&
+                Objects.equals(emp_details, employees.emp_details) &&
+                Objects.equals(emp_role, employees.emp_role) &&
+                Objects.equals(emp_position, employees.emp_position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(emp_name, emp_details, emp_role, id, emp_position);
+    }
+
     public String getEmp_name() {
         return emp_name;
     }

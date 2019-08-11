@@ -19,3 +19,9 @@ CREATE TABLE IF NOT EXISTS news (
  news_content VARCHAR,
  dpt_id INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS departments_employees (
+ id int PRIMARY KEY auto_increment,
+ dpt_id INTEGER,
+ emp_id INTEGER
+);
