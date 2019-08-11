@@ -13,13 +13,13 @@ public interface DepartmentsDao {
     //list and read all departments
     List<Departments>getAllDepartments();
 
-    //find and get news of a department
-    Departments findById();
-    List<News>getAllNews(int dpt_id);
-
     //M:M r-ship
     void addDptToEmployees(Departments departments, Employees employees);
     List<Employees> getAllEmployeesBelongingToDepartment(int emp_id);
+
+    //find and get news of a department by id
+    Departments findById(int dpt_id);
+    List<News>getAllNews(int dpt_id);
 
     //Delete
     void deleteById(int dpt_id);
