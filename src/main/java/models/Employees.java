@@ -7,7 +7,7 @@ public class Employees {
     private String emp_name;
     private String emp_details;
     private String emp_role;
-    private int emp_id;
+    private int id;
     private String emp_position;
 
     public Employees(String emp_name, String emp_details, String emp_role, String emp_position) {
@@ -42,11 +42,11 @@ public class Employees {
     }
 
     public int getEmp_id() {
-        return emp_id;
+        return id;
     }
 
     public void setEmp_id(int emp_id) {
-        this.emp_id = emp_id;
+        this.id = emp_id;
     }
 
     public String getEmp_position() {

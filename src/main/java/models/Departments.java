@@ -6,7 +6,7 @@ public class Departments {
     private String dpt_name;
     private String dpt_description;
     private int dpt_empNo;
-    private String dpt_id;
+    private String id;
 
 
     //Constructor
@@ -17,6 +17,25 @@ public class Departments {
         this.dpt_description = dpt_description;
         this.dpt_empNo = dpt_empNo;
 
+    }
+
+
+    //Override
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Departments that = (Departments) o;
+        return dpt_empNo == that.dpt_empNo &&
+                Objects.equals(dpt_name, that.dpt_name) &&
+                Objects.equals(dpt_description, that.dpt_description) &&
+                Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dpt_name, dpt_description, dpt_empNo, id);
     }
 
     public String getDpt_name() {
@@ -43,24 +62,13 @@ public class Departments {
         this.dpt_empNo = dpt_empNo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Departments that = (Departments) o;
-        return dpt_empNo == that.dpt_empNo &&
-                Objects.equals(dpt_name, that.dpt_name) &&
-                Objects.equals(dpt_description, that.dpt_description) &&
-                Objects.equals(dpt_id, that.dpt_id);
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(dpt_name, dpt_description, dpt_empNo, dpt_id);
+    public void setId(String id) {
+        this.id = id;
     }
-
-    //Override
-
-
+//getters and setters
 
 }

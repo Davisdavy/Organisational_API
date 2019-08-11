@@ -2,7 +2,7 @@ package models;
 
 public class News {
 
-    private int news_id;
+    private int id;
     private String news_content;
     private int dpt_id;
     private String news_name;
@@ -14,11 +14,11 @@ public class News {
     }
 
     public int getNews_id() {
-        return news_id;
+        return id;
     }
 
     public void setNews_id(int news_id) {
-        this.news_id = news_id;
+        this.id = news_id;
     }
 
     public String getNews_content() {
