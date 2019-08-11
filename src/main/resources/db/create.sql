@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS departments (
  id int PRIMARY KEY auto_increment,
  dpt_name VARCHAR,
- dpt_descriptionVARCHAR,
+ dpt_description VARCHAR,
  dpt_empNo INT
 );
 

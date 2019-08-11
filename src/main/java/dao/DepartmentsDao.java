@@ -18,10 +18,10 @@ public interface DepartmentsDao {
     List<Employees> getAllEmployeesBelongingToDepartment(int emp_id);
 
     //find and get news of a department by id
-    Departments findById(int dpt_id);
+    Departments findById(int id);
     List<News>getAllNews(int dpt_id);
 
     //Delete
-    void deleteById(int dpt_id);
+    void deleteById(int id);
     void clearAll();
 }

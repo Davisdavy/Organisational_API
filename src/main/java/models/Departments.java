@@ -6,7 +6,7 @@ public class Departments {
     private String dpt_name;
     private String dpt_description;
     private int dpt_empNo;
-    private String id;
+    private int id;
 
 
     //Constructor
@@ -62,11 +62,11 @@ public class Departments {
         this.dpt_empNo = dpt_empNo;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 //getters and setters
