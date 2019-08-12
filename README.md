@@ -1,7 +1,7 @@
 # Organisational Api.
-:satisfied:
+
 #### An API Application that enables access to news and employees to a department of an organisation.  , Monday August 2019
-#### By **Davis Wafula**;
+##### By **Davis Wafula**;
 ## Description
 
 Organisational Api gives you the ability to query for all the users and the departments associated with them.
