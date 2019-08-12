@@ -68,9 +68,9 @@ public class Sql2oEmployeesDao implements EmployeesDao {
         try(Connection conn = sql2o.open()){
             List<Integer> allDepartmentIds = conn.createQuery(matchToGetDepartmentId).addParameter("emp_id", emp_id)
                     .executeAndFetch(Integer.class);
-            for(Integer departmentId : allDepartmentIds){
+            for(Integer dpt_id : allDepartmentIds){
                 String getFromDepartments = "SELECT * FROM departments WHERE id=:dpt_id";
-                allDepartments.add(conn.createQuery(getFromDepartments).addParameter("dpt_id", departmentId).executeAndFetchFirst(Departments.class));
+                allDepartments.add(conn.createQuery(getFromDepartments).addParameter("dpt_id", dpt_id).executeAndFetchFirst(Departments.class));
             }
         }catch (Sql2oException ex){
             System.out.println(ex);
