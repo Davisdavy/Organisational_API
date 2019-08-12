@@ -38,7 +38,14 @@ public class Sql2oNewsDaoTest {
         int newId = testNews.getNews_id();
         assertEquals(newId,testNews.getNews_id());
     }
-
+//    @Test
+//    public void deleteById() throws Exception {
+//        News testNews = setupNews();
+//        News otherNews = setupNews();
+//        assertEquals(2, newsDao.getAllNews().size());
+//       // NewsDao.deleteById(testNews.getNews_id());
+//        assertEquals(1, newsDao.getAllNews().size());
+//    }
 
 
 
