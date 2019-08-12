@@ -24,8 +24,8 @@ public class EmployeesTest {
     @Test
     public void setEmployeesId()throws Exception{
         Employees employees = setupEmployees();
-        employees.setEmp_id(4);
-        assertNotEquals(2,employees.getEmp_id());
+        employees.setId(4);
+        assertNotEquals(2,employees.getId());
 
     }
     @Test

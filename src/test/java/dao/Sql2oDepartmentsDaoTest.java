@@ -14,14 +14,14 @@ import static org.junit.Assert.*;
 
 public class Sql2oDepartmentsDaoTest {
     private static Connection conn;
-    private Sql2oDepartmentsDao departmentsDao;
+    private  static Sql2oDepartmentsDao departmentsDao;
     private static Sql2oEmployeesDao employeesDao;
 
     @Before
     public void setUp() throws Exception {
         String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
         Sql2o sql2o = new Sql2o(connectionString, "", "");
-        //employeesDao = new Sql2oEmployeesDao(sql2o);
+        employeesDao = new Sql2oEmployeesDao(sql2o);
         departmentsDao = new Sql2oDepartmentsDao(sql2o);
 
         conn = sql2o.open();
@@ -58,26 +58,45 @@ public class Sql2oDepartmentsDaoTest {
         assertEquals(departments,department2);
     }
 
-//    @Test
-//    public void addDepartment() {
-//        Departments departments = se();
-//        departmentsDao.add(departments);
-//        int departId = departments.getId();
-//        assertEquals(departId,departments.getId());
-//    }
+    @Test
+    public void addDepartment() {
+        Departments departments = setupDepartments();
+        departmentsDao.add(departments);
+        int departId = departments.getId();
+        assertEquals(departId,departments.getId());
+    }
+
+    @Test
+    public void deletingDepartmentsAlsoUpdatesJoinTable() throws Exception {
+        Employees testEmployees = setupEmployees();
+        employeesDao.add(testEmployees);
+
+        Departments testDepartments = setupDepartments();
+        departmentsDao.add(testDepartments);
+
+        Departments testDepartments2 = setupDepartments2();
+        departmentsDao.add(testDepartments2);
+
+        departmentsDao.addDptToEmployees(testDepartments,testEmployees);
+        departmentsDao.addDptToEmployees(testDepartments2,testEmployees);
+
+        departmentsDao.deleteById(testDepartments.getId());
+        assertEquals(0, departmentsDao.getAllEmployeesBelongingToDepartment(testDepartments.getId()).size());
+    }
 
     @Test
     public void  addDptToEmployees() {
+        Employees employees = new Employees("Margaret", "Senior Chef", "Cooks","North Dakota");
+        employeesDao.add(employees);
+        Employees employees2 = new Employees("Margaret", "Senior Chef", "Cooks","North Dakota");
+        employeesDao.add(employees2);
+
         Departments departments = setupDepartments();
         departmentsDao.add(departments);
-        Employees employees = new Employees("Davis", "MD", "directs","North Arizona");
-        employeesDao.add(employees);
-        Employees employees2 = new Employees("Davis", "MD", "directs","North Arizona");
-        employeesDao.add(employees2);
         departmentsDao.addDptToEmployees(departments,employees);
         departmentsDao.addDptToEmployees(departments,employees2);
-        Employees[] addDeptToEmployee = {employees,employees2};
-        assertEquals(Arrays.asList(addDeptToEmployee),departmentsDao.getAllEmployeesBelongingToDepartment(departments.getId()));
+        Employees[] addDptToEmployee = {employees,employees2};
+        assertEquals(Arrays.asList(addDptToEmployee),departmentsDao.getAllEmployeesBelongingToDepartment(departments.getId()));
     }
     @Test
     public void clearAll() {
@@ -89,5 +108,9 @@ public class Sql2oDepartmentsDaoTest {
     public Departments setupDepartments(){
         return new Departments("Power Department", "Deals with power issues", 10);
     }
+    public Employees setupEmployees(){
+        return new Employees("Davis", "Badge 1234", "Directs","MD");
+    }
+    public Departments setupDepartments2(){ return new Departments("accounts", "Check balances", 20);}
 
 }

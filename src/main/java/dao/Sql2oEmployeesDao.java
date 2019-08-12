@@ -25,7 +25,7 @@ public class Sql2oEmployeesDao implements EmployeesDao {
                     .bind(employees)
                     .executeUpdate()
                     .getKey();
-            employees.setEmp_id(id);
+            employees.setId(id);
         }catch (Sql2oException ex){
             System.out.println(ex);
         }
@@ -53,7 +53,7 @@ public class Sql2oEmployeesDao implements EmployeesDao {
         try(Connection conn = sql2o.open()){
             conn.createQuery(sql)
                     .addParameter("dpt_id", departments.getId())
-                    .addParameter("emp_id", employees.getEmp_id())
+                    .addParameter("emp_id", employees.getId())
                     .throwOnMappingFailure(false)
                     .executeUpdate();
         }catch (Sql2oException ex){
@@ -64,13 +64,16 @@ public class Sql2oEmployeesDao implements EmployeesDao {
     @Override
     public List<Departments> getAllDptBelongingToEmployees(int emp_id) {
         ArrayList<Departments> allDepartments = new ArrayList<>();
-        String matchToGetDepartmentId = "SELECT dpt_id FROM departments_employees WHERE emp_id =:emp_id";
+        String joinQuery = "SELECT dpt_id FROM departments_employees WHERE emp_id =:emp_id";
         try(Connection conn = sql2o.open()){
-            List<Integer> allDepartmentIds = conn.createQuery(matchToGetDepartmentId).addParameter("emp_id", emp_id)
+            List<Integer> allDepartmentIds = conn.createQuery(joinQuery)
+                    .addParameter("emp_id", emp_id)
                     .executeAndFetch(Integer.class);
             for(Integer dpt_id : allDepartmentIds){
-                String getFromDepartments = "SELECT * FROM departments WHERE id=:dpt_id";
-                allDepartments.add(conn.createQuery(getFromDepartments).addParameter("dpt_id", dpt_id).executeAndFetchFirst(Departments.class));
+                String departmentsQuery = "SELECT * FROM departments WHERE id=:dpt_id";
+                allDepartments.add(conn.createQuery(departmentsQuery)
+                        .addParameter("dpt_id", dpt_id)
+                        .executeAndFetchFirst(Departments.class));
             }
         }catch (Sql2oException ex){
             System.out.println(ex);

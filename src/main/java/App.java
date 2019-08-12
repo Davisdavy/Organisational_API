@@ -34,7 +34,7 @@ public class App {
             departmentsDao.add(departments);
             res.status(201);
             res.type("application/json");
-            return gson.toJson(departments);
+            return gson.toJson(departmentsDao.getAllDepartments());
         });
 
         //read all
@@ -77,8 +77,12 @@ public class App {
             response.status(201);
             return gson.toJson(employees);
         });
+        //access all employees
+        get("/employees", "application/json", (request, response) -> {
+            return gson.toJson(employeesDao.getAllEmployees());
+        });
         //Assign a department to an employee
-        post("employees/emp_id/departments/:dpt_id","application/json",(request, response) -> {
+        post("/employees/emp_id/departments/:dpt_id","application/json",(request, response) -> {
             int emp_id = Integer.parseInt(request.params("emp_id"));
             int dpt_id = Integer.parseInt(request.params("dpt_id"));
             Employees empFound = employeesDao.findById(emp_id);
@@ -88,7 +92,7 @@ public class App {
                 departmentsDao.addDptToEmployees(dptFound,empFound);
                 response.type("application/json");
                 response.status(201);
-                return gson.toJson("Employees and Department successfully created");
+                return gson.toJson(String.format("Employees '%s' and Department '%s' successfully created",empFound.getEmp_name(), dptFound.getDpt_name()));
             }
             else {
                 throw new ApiException(404, String.format("Employee or Department not found"));
@@ -103,22 +107,12 @@ public class App {
             if (employees == null){
                 throw new Exception("Employee with that id does not exist");
             }else if(employeesDao.getAllDptBelongingToEmployees(emp_id).size() == 0){
-                return "{\"message\":\"Employee not associated with any department\"}";
+                return "{\"message\":\"Sorry! Employee not associated with any of the departments\"}";
             }else {
                 return gson.toJson(employeesDao.getAllDptBelongingToEmployees(emp_id));
             }
         });
 
-        //access all employees
-        get("/employees", "application/json", (request, response) -> {
-            return gson.toJson(employeesDao.getAllEmployees());
-        });
-
-        //Read all news
-        get("/news","application/json",(request, response) -> {
-            int dpt_id = Integer.parseInt(request.params("dpt_id"));
-            return gson.toJson(newsDao.getAllNews());
-        });
 
         //Add news
         post("/news/new","application/json",(request, response) -> {
@@ -127,6 +121,11 @@ public class App {
             response.type("application/json");
             response.status(201);
             return gson.toJson(news);
+        });
+        //Read all news
+        get("/news","application/json",(request, response) -> {
+            int dpt_id = Integer.parseInt(request.params("dpt_id"));
+            return gson.toJson(newsDao.getAllNews());
         });
 
         //FILTERS

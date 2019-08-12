@@ -34,8 +34,8 @@ public class Sql2oEmployeesDaoTest {
     public void addAndSetId() {
         Employees testEmployee = setupEmployees();
         employeesDao.add(testEmployee);
-        int empId= testEmployee.getEmp_id();
-        assertEquals(testEmployee.getEmp_id(),empId);
+        int empId= testEmployee.getId();
+        assertEquals(testEmployee.getId(),empId);
     }
     @Test
     public void getAllEmployees(){
@@ -57,14 +57,16 @@ public class Sql2oEmployeesDaoTest {
     public void addEmployeeToDepartment() {
         Employees testEmployees = setupEmployees();
         employeesDao.add(testEmployees);
-        Departments testDepartments = new Departments("accounts", "Check balances", 20);
+
+        Departments testDepartments = setupDepartments();
         departmentsDao.add(testDepartments);
-        Departments department1 = new Departments("accounts", "Check balances", 20);
+        Departments department1 = setupDepartments2();
         departmentsDao.add(department1);
+
         employeesDao.addEmpToDepartments(testEmployees,testDepartments);
         employeesDao.addEmpToDepartments(testEmployees,department1);
         Departments[] addedEmToDepartment = {testDepartments,department1};
-        assertEquals(Arrays.asList(addedEmToDepartment),employeesDao.getAllDptBelongingToEmployees(testEmployees.getEmp_id()));
+        assertEquals(Arrays.asList(addedEmToDepartment),employeesDao.getAllDptBelongingToEmployees(testEmployees.getId()));
     }
 
 
@@ -72,10 +74,12 @@ public class Sql2oEmployeesDaoTest {
     public void findById() {
         Employees testEmployee = setupEmployees();
         employeesDao.add(testEmployee);
-        Employees employee2 = employeesDao.findById(testEmployee.getEmp_id());
+        Employees employee2 = employeesDao.findById(testEmployee.getId());
         assertEquals(employee2,testEmployee);
     }
     public Employees setupEmployees(){
         return new Employees("Davis", "Badge 1234", "Directs","MD");
     }
+    public Departments setupDepartments(){ return new Departments("Fire Department", "Deals with fire issues", 10);}
+    public Departments setupDepartments2(){ return new Departments("accounts", "Check balances", 20);}
 }

@@ -58,12 +58,12 @@ public class Employees {
         this.emp_role = emp_role;
     }
 
-    public int getEmp_id() {
+    public int getId() {
         return id;
     }
 
-    public void setEmp_id(int emp_id) {
-        this.id = emp_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmp_position() {
