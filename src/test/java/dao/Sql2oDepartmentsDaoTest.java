@@ -16,11 +16,12 @@ public class Sql2oDepartmentsDaoTest {
     private static Connection conn;
     private  static Sql2oDepartmentsDao departmentsDao;
     private static Sql2oEmployeesDao employeesDao;
+    private static Sql2oNewsDao newsDao;
 
-    @Before
-    public void setUp() throws Exception {
-        String connectionString = "jdbc:h2:mem:testing;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
-        Sql2o sql2o = new Sql2o(connectionString, "", "");
+    @BeforeClass
+    public static void setUp() throws Exception {
+        String connectionString = "jdbc:postgresql://localhost:5432/org_test";
+        Sql2o sql2o = new Sql2o(connectionString, "davis", "vegas2017");
         employeesDao = new Sql2oEmployeesDao(sql2o);
         departmentsDao = new Sql2oDepartmentsDao(sql2o);
 
@@ -29,9 +30,16 @@ public class Sql2oDepartmentsDaoTest {
 
     @After
     public void tearDown() throws Exception {
-//        employeesDao.clearAll();
+        System.out.println("clearing database");
+        employeesDao.clearAll();
         departmentsDao.clearAll();
-        conn.close();
+        newsDao.clearAll();
+    }
+
+    @AfterClass //changed to @AfterClass (run once after all tests in this file completed)
+    public static void shutDown() throws Exception{ //changed to static
+        conn.close(); // close connection once after this entire test file is finished
+        System.out.println("connection closed");
     }
 
     @Test
