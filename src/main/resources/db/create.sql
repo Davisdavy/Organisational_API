@@ -1,3 +1,7 @@
+CREATE DATABASE org;
+\c org;
+
+
 CREATE TABLE IF NOT EXISTS departments (
  id int PRIMARY KEY auto_increment,
  dpt_name VARCHAR,
@@ -25,3 +29,5 @@ CREATE TABLE IF NOT EXISTS departments_employees (
  dpt_id INTEGER,
  emp_id INTEGER
 );
+
+CREATE DATABASE org_test WITH TEMPLATE org;

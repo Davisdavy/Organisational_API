@@ -8,6 +8,11 @@ import models.Employees;
 import models.News;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static spark.Spark.*;
 
 public class App {
@@ -28,7 +33,6 @@ public class App {
         conn = sql2o.open();
 
         //create
-
         post("/departments/new", "application/json", (req, res) -> {
             Departments departments = gson.fromJson(req.body(), Departments.class);
             departmentsDao.add(departments);
@@ -46,6 +50,11 @@ public class App {
         get("/departments/:id", "application/json", (req, res) -> { //accept a request in format JSON from an app
             res.type("application/json");
             int dpt_id = Integer.parseInt(req.params("id"));
+
+            Departments departmentsToFind = departmentsDao.findById(dpt_id);
+            if (departmentsToFind == null){
+                throw new ApiException(404, String.format("No department with the id: \"%s\" exists", req.params("id")));
+            }
             res.type("application/json");
             return gson.toJson(departmentsDao.findById(dpt_id));
         });
@@ -67,7 +76,15 @@ public class App {
             int id = Integer.parseInt(request.params("id"));
             return gson.toJson(newsDao.getAllNews());
         });
-
+        post("/departments/:dpt_id/employees/new", "application/json", (req, res) -> {
+            int dpt_id = Integer.parseInt(req.params("dpt_id"));
+            Employees employees = gson.fromJson(req.body(), Employees.class);
+            employees.setId(dpt_id);
+            employeesDao.add(employees);
+            res.status(201);
+            res.type("application/json");
+            return gson.toJson(employees);
+        });
 
         //Add an employee
         post("/employees/new", "application/json", (request, response) -> {
@@ -78,15 +95,13 @@ public class App {
             return gson.toJson(employees);
         });
         //access all employees
-        get("/employees", "application/json", (request, response) -> {
-            return gson.toJson(employeesDao.getAllEmployees());
-        });
+        get("/employees", "application/json", (request, response) -> gson.toJson(employeesDao.getAllEmployees()));
         //Assign a department to an employee
         post("/employees/emp_id/departments/:dpt_id","application/json",(request, response) -> {
-            int emp_id = Integer.parseInt(request.params("emp_id"));
-            int dpt_id = Integer.parseInt(request.params("dpt_id"));
-            Employees empFound = employeesDao.findById(emp_id);
-            Departments dptFound = departmentsDao.findById(dpt_id);
+            int empid = Integer.parseInt(request.params("emp_id"));
+            int dptid = Integer.parseInt(request.params("dpt_id"));
+            Employees empFound = employeesDao.findById(empid);
+            Departments dptFound = departmentsDao.findById(dptid);
 
             if (dptFound != null && empFound!= null){
                 departmentsDao.addDptToEmployees(dptFound,empFound);
@@ -100,16 +115,17 @@ public class App {
         });
 
 
-        get("/employees/:emp_id/departments","application/json",(request, response) -> {
-            int emp_id = Integer.parseInt(request.params("emp_id"));
-            Employees employees = employeesDao.findById(emp_id);
 
-            if (employees == null){
+        get("/employees/:emp_id/departments","application/json",(request, response) -> {
+            int empid = Integer.parseInt(request.params("emp_id"));
+            Employees employeesTofind = employeesDao.findById(empid);
+
+            if (employeesTofind == null){
                 throw new Exception("Employee with that id does not exist");
-            }else if(employeesDao.getAllDptBelongingToEmployees(emp_id).size() == 0){
+            }else if(employeesDao.getAllDptBelongingToEmployees(empid).size() == 0){
                 return "{\"message\":\"Sorry! Employee not associated with any of the departments\"}";
             }else {
-                return gson.toJson(employeesDao.getAllDptBelongingToEmployees(emp_id));
+                return gson.toJson(employeesDao.getAllDptBelongingToEmployees(empid));
             }
         });
 
@@ -125,9 +141,19 @@ public class App {
         //Read all news
         get("/news","application/json",(request, response) -> {
             int dpt_id = Integer.parseInt(request.params("dpt_id"));
+            response.type("application/json");
             return gson.toJson(newsDao.getAllNews());
         });
 
+        exception(ApiException.class, (exc, req, res) -> {
+            ApiException err = (ApiException) exc;
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", err.getStatusCode());
+            jsonMap.put("errorMessage", err.getMessage());
+            res.type("application/json"); //after does not run in case of an exception.
+            res.status(err.getStatusCode()); //set the status
+            res.body(gson.toJson(jsonMap));  //set the output.
+        });
         //FILTERS
         after((req, res) ->{
             res.type("application/json");
