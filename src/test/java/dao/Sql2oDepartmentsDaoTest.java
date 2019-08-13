@@ -33,7 +33,7 @@ public class Sql2oDepartmentsDaoTest {
         System.out.println("clearing database");
         employeesDao.clearAll();
         departmentsDao.clearAll();
-        newsDao.clearAll();
+
     }
 
     @AfterClass //changed to @AfterClass (run once after all tests in this file completed)

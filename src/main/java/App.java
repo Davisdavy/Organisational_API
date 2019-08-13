@@ -59,6 +59,7 @@ public class App {
             return gson.toJson(departmentsDao.findById(dpt_id));
         });
 
+
         //news : dpt
 
         //Add news 2 department
@@ -66,6 +67,7 @@ public class App {
             int id = Integer.parseInt(request.params("id"));
             News news = gson.fromJson(request.body(),News.class);
             news.setNews_id(id);
+
             newsDao.add(news);
             response.type("application/json");
             response.status(201);
@@ -74,6 +76,7 @@ public class App {
         //access news for a certain department
         get("/departments/:id/dptNews", "application/json", (request, response) -> {
             int id = Integer.parseInt(request.params("id"));
+          //  Departments departmentToFind = departmentsDao.findById(id);
             return gson.toJson(newsDao.getAllNews());
         });
         post("/departments/:dpt_id/employees/new", "application/json", (req, res) -> {
@@ -95,13 +98,17 @@ public class App {
             return gson.toJson(employees);
         });
         //access all employees
-        get("/employees", "application/json", (request, response) -> gson.toJson(employeesDao.getAllEmployees()));
+        get("/employees", "application/json", (request, response) ->
+        {
+            response.type("application/json");
+            return gson.toJson(employeesDao.getAllEmployees());
+        });
         //Assign a department to an employee
         post("/employees/emp_id/departments/:dpt_id","application/json",(request, response) -> {
-            int empid = Integer.parseInt(request.params("emp_id"));
-            int dptid = Integer.parseInt(request.params("dpt_id"));
-            Employees empFound = employeesDao.findById(empid);
-            Departments dptFound = departmentsDao.findById(dptid);
+            int emp_id = Integer.parseInt(request.params("emp_id"));
+            int dpt_id = Integer.parseInt(request.params("dpt_id"));
+            Employees empFound = employeesDao.findById(emp_id);
+            Departments dptFound = departmentsDao.findById(dpt_id);
 
             if (dptFound != null && empFound!= null){
                 departmentsDao.addDptToEmployees(dptFound,empFound);
@@ -117,15 +124,15 @@ public class App {
 
 
         get("/employees/:emp_id/departments","application/json",(request, response) -> {
-            int empid = Integer.parseInt(request.params("emp_id"));
-            Employees employeesTofind = employeesDao.findById(empid);
+            int emp_id = Integer.parseInt(request.params("emp_id"));
+            Employees employeesTofind = employeesDao.findById(emp_id);
 
             if (employeesTofind == null){
                 throw new Exception("Employee with that id does not exist");
-            }else if(employeesDao.getAllDptBelongingToEmployees(empid).size() == 0){
+            }else if(employeesDao.getAllDptBelongingToEmployees(emp_id).size() == 0){
                 return "{\"message\":\"Sorry! Employee not associated with any of the departments\"}";
             }else {
-                return gson.toJson(employeesDao.getAllDptBelongingToEmployees(empid));
+                return gson.toJson(employeesDao.getAllDptBelongingToEmployees(emp_id));
             }
         });
 
@@ -140,7 +147,6 @@ public class App {
         });
         //Read all news
         get("/news","application/json",(request, response) -> {
-            int dpt_id = Integer.parseInt(request.params("dpt_id"));
             response.type("application/json");
             return gson.toJson(newsDao.getAllNews());
         });

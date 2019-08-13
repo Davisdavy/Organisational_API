@@ -16,8 +16,7 @@ public class Sql2oEmployeesDaoTest {
     private  static Connection conn;
     private static Sql2oDepartmentsDao departmentsDao;
 
-    @Before
-    public void setUp() throws Exception {
+     public void setUp() throws Exception {
         String connectingString= "jdbc:postgresql://localhost:5432/org_test";
         Sql2o sql2o = new Sql2o(connectingString,"davis","vegas2017");
         employeesDao = new Sql2oEmployeesDao(sql2o);
