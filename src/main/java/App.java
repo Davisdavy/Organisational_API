@@ -151,8 +151,8 @@ public class App {
             return gson.toJson(newsDao.getAllNews());
         });
 
-        exception(ApiException.class, (exc, req, res) -> {
-            ApiException err = (ApiException) exc;
+        exception(ApiException.class, (exception, req, res) -> {
+            ApiException err = exception;
             Map<String, Object> jsonMap = new HashMap<>();
             jsonMap.put("status", err.getStatusCode());
             jsonMap.put("errorMessage", err.getMessage());
